@@ -1,10 +1,10 @@
 import { Course, CurriculumLine, Grade, Transcript } from "./types";
 
 const COURSE_ROW =
-  /(\d+)\s+([A-Z]{2,4}\d{2,3}[A-Z])\s+(.+?)\s+(TH|LO|ETL|SS|OC|PJT|ECA)\s+(\d\.\d)\s+([SABCDEFNPWU])\d?\s+([A-Z][a-z]{2}-\d{4})\s+\d{1,2}-[A-Z][a-z]{2}-\d{4}\s+(\S+)\s+(FC|DC|SPE|OE|DLES|DLEC|NGCR|PI)/g;
+  /(\d+)\s+([A-Z]{2,4}\d{2,3}[A-Z])\s+(.+?)\s+(TH|LO|ETL|SS|OC|PJT|ECA)\s+(\d\.\d)\s+([SABCDEFNPWU])\d?\s+([A-Z][a-z]{2}-\d{4})\s+\d{1,2}-[A-Z][a-z]{2}-\d{4}\s+(\S+)\s+([A-Z]{2,5})/g;
 
 const CURRICULUM_ROW =
-  /(Foundation Core|Discipline-linked Engineering Sciences|Discipline Core|Specialization Elective|Projects and Internship|Open Elective|Bridge Course|Non-graded Core Requirement|Total Credits)\s+(\d+\.\d)\s+(\d+\.\d)/g;
+  /([A-Z][A-Za-z][A-Za-z\- ]+?)\s+(\d+\.\d)\s+(\d+\.\d)(?=\s|$)/g;
 
 export function parseTranscript(raw: string): Transcript {
   const text = raw.replace(/\s+/g, " ").trim();
@@ -25,8 +25,11 @@ export function parseTranscript(raw: string): Transcript {
 
   const curriculum: CurriculumLine[] = [];
   let creditsRequiredTotal: number | undefined;
-  for (const m of text.matchAll(CURRICULUM_ROW)) {
-    const line = { category: m[1], required: parseFloat(m[2]), earned: parseFloat(m[3]) };
+  const curSection = text.match(/Curriculum Details(.*?)(Basket Details|CGPA Details|$)/i)?.[1] ?? "";
+  for (const m of curSection.matchAll(CURRICULUM_ROW)) {
+    const category = m[1].trim();
+    if (/credits required|distribution type/i.test(category)) continue;
+    const line = { category, required: parseFloat(m[2]), earned: parseFloat(m[3]) };
     if (/total/i.test(line.category)) creditsRequiredTotal = line.required;
     else curriculum.push(line);
   }
