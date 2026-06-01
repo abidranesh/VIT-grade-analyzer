@@ -1,7 +1,7 @@
 import { Course, CurriculumLine, Grade, Transcript } from "./types";
 
 const COURSE_ROW =
-  /(\d+)\s+([A-Z]{2,4}\d{2,3}[A-Z])\s+(.+?)\s+(TH|LO|ETL|SS|OC|PJT|ECA)\s+(\d\.\d)\s+([SABCDEFNPWU])\d?\s+([A-Z][a-z]{2}-\d{4})\s+\d{1,2}-[A-Z][a-z]{2}-\d{4}\s+(\S+)\s+([A-Z]{2,5})/g;
+  /(\d+)\s+([A-Z]{2,7}\d{2,3}[A-Z]?)\s+(.+?)\s+(TH|LO|ETL|SS|OC|PJT|ECA)\s+(\d\.\d)\s+([SABCDEFNPWU])\d?\s+([A-Z][a-z]{2}-\d{4})\s+\d{1,2}-[A-Z][a-z]{2}-\d{4}\s+(\S+)\s+([A-Z]{2,5})/g;
 
 const CURRICULUM_ROW =
   /([A-Z][A-Za-z][A-Za-z\- ]+?)\s+(\d+\.\d)\s+(\d+\.\d)(?=\s|$)/g;
